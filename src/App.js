@@ -1,22 +1,44 @@
-import React, { Component } from 'react';
+// @flow
+
+import React, { Component, type Node } from 'react';
+
+type CreateContextFn = <T>(defaultValue: T) => {
+  Provider: React$ComponentType<{value: T}>,
+  Consumer: React$ComponentType<{children: (value: T) => Node}>,
+};
+
+// $FlowFixMe: Cannot call React.createContext because property createContext is missing in object type
+const createReactContext: CreateContextFn = React.createContext;
 
 // first we will make a new context
-const MyContext = React.createContext();
+const MyContext = createReactContext();
+
+type Props = {
+  children: Node
+};
+
+type State = {
+  name: string,
+  age: number,
+  cool: boolean
+};
 
 // Then create a provider Component
-class MyProvider extends Component {
+class MyProvider extends Component<Props, State> {
   state = {
     name: 'Wes',
     age: 100,
     cool: true
-  }
+  };
+
   render() {
     return (
       <MyContext.Provider value={{
         state: this.state,
-        growAYearOlder: () => this.setState({
-          age: this.state.age + 1
-        })
+        growAYearOlder: () =>
+          this.setState({
+            age: this.state.age + 1
+          })
       }}>
         {this.props.children}
       </MyContext.Provider>
@@ -30,17 +52,18 @@ const Family = (props) => (
   </div>
 )
 
-class Person extends Component {
+class Person extends Component<{}> {
   render() {
     return (
       <div className="person">
         <MyContext.Consumer>
           {(context) => (
-            <React.Fragment>
-              <p>Age: {context.state.age}</p>
-              <p>Name: {context.state.name}</p>
-              <button onClick={context.growAYearOlder}>🍰🍥🎂</button>
-            </React.Fragment>
+            context &&
+              <div>
+                <p>Age: {context.state.age}</p>
+                <p>Name: {context.state.name}</p>
+                <button onClick={context.growAYearOlder}>🍰🍥🎂</button>
+              </div>
           )}
         </MyContext.Consumer>
       </div>
@@ -49,7 +72,7 @@ class Person extends Component {
 }
 
 
-class App extends Component {
+class App extends Component<{}> {
   render() {
     return (
       <MyProvider>
