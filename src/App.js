@@ -1,10 +1,12 @@
 // @flow
 
-import React, { Component, type Node } from 'react';
+import React, { Component } from 'react';
+
+import type { Node, ComponentType } from 'react';
 
 type CreateContextFn = <T>(defaultValue: T) => {
-  Provider: React$ComponentType<{value: T}>,
-  Consumer: React$ComponentType<{children: (value: T) => Node}>,
+  Provider: ComponentType<{value: T}>,
+  Consumer: ComponentType<{children: (value: T) => Node}>,
 };
 
 // $FlowFixMe: Cannot call React.createContext because property createContext is missing in object type
