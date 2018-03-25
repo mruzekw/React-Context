@@ -35,10 +35,9 @@ class MyProvider extends Component<Props, State> {
     return (
       <MyContext.Provider value={{
         state: this.state,
-        growAYearOlder: () =>
-          this.setState({
-            age: this.state.age + 1
-          })
+        growAYearOlder: () => this.setState({
+          age: this.state.age + 1
+        })
       }}>
         {this.props.children}
       </MyContext.Provider>
